@@ -4,6 +4,16 @@ WORKDIR /app
 
 COPY . .
 
+ARG S3_PATH
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG AWS_DEFAULT_REGION
+
+ENV S3_PATH=${S3_PATH}
+ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+ENV AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+
 RUN useradd -ms /bin/bash ubuntu
 
 RUN chown -R ubuntu:ubuntu /app
@@ -12,23 +22,16 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     && rm -rf /var/lib/apt/lists/*
 
-#RUN distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
-#    && curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | apt-key add - \
-#    && curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | tee /etc/apt/sources.list.d/nvidia-container-runtime.list \
-#    && apt-get update \
-#    && apt-get install -y nvidia-container-runtime \
-#    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y awscli && rm -rf /var/lib/apt/lists/*
 
-#RUN pip3 install -r requirements.txt \
-#    && pip3 install xformers
+RUN apt-get update && apt-get install -y potrace && rm -rf /var/lib/apt/lists/*
 
-#RUN pip3 install xformers
+COPY entrypoint.sh /app/entrypoint.sh
+
+RUN chmod +x /app/entrypoint.sh
+
+RUN pip3 install xformers
 
 USER ubuntu
 
-RUN echo '#!/bin/bash \n\
-./webui.sh --listen --api' > ./entrypoint.sh \
-    && chmod +x ./entrypoint.sh
-
-ENTRYPOINT ["./entrypoint.sh"]
-#CMD ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["/app/entrypoint.sh"]
