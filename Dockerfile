@@ -30,7 +30,7 @@ COPY entrypoint.sh /app/entrypoint.sh
 
 RUN chmod +x /app/entrypoint.sh
 
-RUN pip3 install xformers
+#RUN pip3 install xformers
 
 USER ubuntu
 
