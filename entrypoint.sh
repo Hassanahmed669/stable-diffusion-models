@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mount -t tmpfs -o rw,size=2048m tmpfs /tmp
+sudo /usr/bin/mount -t tmpfs -o rw,size=2048m tmpfs /tmp
 
 # Set AWS credentials
 export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID

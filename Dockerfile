@@ -24,9 +24,13 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt update && apt get install sudo -y
+
 RUN apt-get update && apt-get install -y awscli && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y potrace && rm -rf /var/lib/apt/lists/*
+
+RUN echo 'ubuntu ALL=(ALL) NOPASSWD: /usr/bin/mount -t tmpfs -o rw,size=2048m tmpfs /tmp' >> /etc/sudoers
 
 COPY entrypoint.sh /app/entrypoint.sh
 
